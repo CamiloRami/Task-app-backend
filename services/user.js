@@ -1,15 +1,15 @@
 const userModel = require('../db/models/user')
-
+const boom = require('@hapi/boom')
 class UserService {
   constructor() {}
 
-  async addUser(user) {
+  async createUser(user) {
     try {
       const newUser = new userModel(user)
       const userSaved = await newUser.save()
       return userSaved
     } catch (error) {
-      throw new Error(`User not saved, ${error}`)
+      throw boom.badRequest(`User not created, ${error}`)
     }
   }
 
@@ -24,7 +24,7 @@ class UserService {
       return user
     }
     catch (error) {
-      throw new Error('User not found')
+      throw boom.notFound(`User not found, ${error}`)
     }
   }
 }
