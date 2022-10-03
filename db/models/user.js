@@ -13,8 +13,14 @@ const userSchema = new Schema({
   name: {
     type: String,
     minlength: [6, '{VALUE} is too short'],
-    maxlength: [255, '{VALUE} is too long'],
-    required: true,
+    maxlength: [64, '{VALUE} is too long'],
+    required: true
+  },
+  password: {
+    type: String,
+    minlength: [8, '{VALUE} is too short'],
+    maxlength: [64, '{VALUE} is too long'],
+    required: true
   },
   date: {
     type: Date,

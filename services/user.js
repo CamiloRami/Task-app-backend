@@ -1,5 +1,6 @@
 const userModel = require('../db/models/user')
 const boom = require('@hapi/boom')
+// const bcrypt = require('bcrypt')
 class UserService {
   constructor() {}
 
@@ -21,10 +22,38 @@ class UserService {
   async getUser(id) {
     try{
       const user = await userModel.findById(id)
+      if (!user) {
+        throw boom.notFound()
+      }
       return user
     }
     catch (error) {
-      throw boom.notFound(`User not found, ${error}`)
+      throw boom.notFound(`User not found`)
+    }
+  }
+
+  async updateUser(id, changes) {
+    try {
+      const userUpdated = await userModel.findByIdAndUpdate(id, changes)
+      if (!userUpdated) {
+        throw boom.notFound()
+      }
+      return userUpdated
+    } catch (error) {
+      throw boom.notFound(`User not found`)
+    }
+  }
+
+  async deleteUser(id) {
+    try{
+      const userDeleted = await userModel.findByIdAndDelete(id)
+      if (!userDeleted) {
+        throw boom.notFound()
+      }
+      return userDeleted
+    }
+    catch (error) {
+      throw boom.notFound(`User not found`)
     }
   }
 }
