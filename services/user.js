@@ -1,13 +1,15 @@
 const userModel = require('../db/models/user')
 const boom = require('@hapi/boom')
-// const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt')
 class UserService {
   constructor() {}
 
   async createUser(user) {
     try {
-      const newUser = new userModel(user)
+      const hash = await bcrypt.hash(user.password, 10)
+      const newUser = new userModel({...user, password: hash})
       const userSaved = await newUser.save()
+      delete userSaved._doc.password
       return userSaved
     } catch (error) {
       throw boom.badRequest(`User not created, ${error}`)

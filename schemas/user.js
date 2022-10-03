@@ -9,7 +9,7 @@ const id = Joi.custom((value, helpers) => {
   return value
 })
 const email = Joi.string().email()
-const password = Joi.string().min(8).max(64)
+const password = Joi.string().min(8)
 const name = Joi.string().min(6).max(64)
 
 const createUserSchema = Joi.object({
@@ -21,6 +21,7 @@ const createUserSchema = Joi.object({
 const updateUserSchema = Joi.object({
   email: email,
   name: name,
+  password: password,
 })
 
 const getUserSchema = Joi.object({

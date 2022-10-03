@@ -18,8 +18,6 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    minlength: [8, '{VALUE} is too short'],
-    maxlength: [64, '{VALUE} is too long'],
     required: true
   },
   date: {
