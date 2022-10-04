@@ -6,17 +6,21 @@ const { createUserSchema, updateUserSchema, getUserSchema } = require('../schema
 const userService = new UserService()
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-  const users = await userService.getUsers()
-  res.status(200).json(users)
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await userService.getUsers()
+    res.status(200).json(users)
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.get('/:id', 
   validatorHandler(getUserSchema, 'params'), 
   async (req, res, next) => {
     try {
-      const users = await userService.getUser(req.params.id)
-      res.status(200).json(users)
+      const user = await userService.getUser(req.params.id)
+      res.status(200).json(user)
     } catch (error) {
       next(error)
     }

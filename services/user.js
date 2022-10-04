@@ -22,16 +22,16 @@ class UserService {
   }
 
   async getUser(id) {
-    try{
-      const user = await userModel.findById(id)
-      if (!user) {
-        throw boom.notFound()
-      }
-      return user
-    }
-    catch (error) {
-      throw boom.notFound(`User not found`)
-    }
+    return new Promise((resolve, reject) => {
+      userModel.findById(id)
+        .populate('tasks', 'description')
+        .exec((error, user) => {
+          if (error) {
+            reject(boom.notFound(`User not found`))
+          }
+          resolve(user)
+        })
+    })
   }
 
   async updateUser(id, changes) {
