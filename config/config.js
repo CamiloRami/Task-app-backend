@@ -7,7 +7,7 @@ const config = {
   dbUri: process.env.DB_URI,
   apiKey: process.env.API_KEY,
   jwtSecret: process.env.JWT_SECRET,
-  whitelist: process.env.WHITELIST.split(','),
+  whitelist: process.env.WHITELIST,
 }
 
 module.exports = config

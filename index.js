@@ -7,9 +7,11 @@ const { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } = require('
 
 const app = express()
 
+const wl = [config.whitelist]
+
 const options = {
   origin: (origin, callback) => {
-    if (config.whitelist.includes(origin) || !origin) {
+    if (wl.includes(origin) || !origin) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
