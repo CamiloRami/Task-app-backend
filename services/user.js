@@ -1,6 +1,8 @@
 const userModel = require('../db/models/user')
+const taskModel = require('../db/models/task')
 const boom = require('@hapi/boom')
 const bcrypt = require('bcrypt')
+
 class UserService {
   constructor() {}
 
@@ -34,6 +36,18 @@ class UserService {
     })
   }
 
+  async getUserByEmail(email) {
+    try {
+      const user = await userModel.findOne({ email })
+      if (!user) {
+        throw boom.notFound()
+      }
+      return user
+    } catch (error) {
+      throw boom.notFound(`User not found`)
+    }
+  }
+
   async updateUser(id, changes) {
     try {
       const userUpdated = await userModel.findByIdAndUpdate(id, changes)
@@ -52,6 +66,10 @@ class UserService {
       if (!userDeleted) {
         throw boom.notFound()
       }
+      const tasks = await taskModel.find({ user: id })
+      tasks.forEach(async task => {
+        await taskModel.findByIdAndDelete(task._id)
+      })
       return userDeleted
     }
     catch (error) {

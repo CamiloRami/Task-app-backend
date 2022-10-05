@@ -2,20 +2,25 @@ const express = require('express')
 const UserService = require('../services/user')
 const validatorHandler = require('../middlewares/validatorHandler')
 const { createUserSchema, updateUserSchema, getUserSchema } = require('../schemas/user')
+const { checkApiKey } = require('./../middlewares/authHandler')
 
 const userService = new UserService()
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  try {
-    const users = await userService.getUsers()
-    res.status(200).json(users)
-  } catch (error) {
-    next(error)
+router.get('/', 
+  checkApiKey,
+  async (req, res, next) => {
+    try {
+      const users = await userService.getUsers()
+      res.status(200).json(users)
+    } catch (error) {
+      next(error)
+    }
   }
-})
+)
 
 router.get('/:id', 
+  checkApiKey,
   validatorHandler(getUserSchema, 'params'), 
   async (req, res, next) => {
     try {
@@ -28,6 +33,7 @@ router.get('/:id',
 )
 
 router.post('/', 
+  checkApiKey,
   validatorHandler(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -40,6 +46,7 @@ router.post('/',
 )
 
 router.patch('/:id', 
+  checkApiKey,
   validatorHandler(getUserSchema, 'params'), 
   validatorHandler(updateUserSchema, 'body'), 
   async (req, res, next) => {
@@ -53,6 +60,7 @@ router.patch('/:id',
 )
 
 router.delete('/:id', 
+  checkApiKey,
   validatorHandler(getUserSchema, 'params'), 
   async (req, res, next) => {
     try {

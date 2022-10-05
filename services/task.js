@@ -49,6 +49,9 @@ class TaskService {
       if (!taskDeleted) {
         throw boom.notFound()
       }
+      const user = await userModel.findById(taskDeleted.user)
+      user.tasks = user.tasks.filter(task => task != id)
+      await user.save()
       return taskDeleted
     }
     catch (error) {

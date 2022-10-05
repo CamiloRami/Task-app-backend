@@ -1,21 +1,30 @@
 const express = require('express')
+const passport = require('passport')
 const TaskService = require('../services/task')
 const validatorHandler = require('../middlewares/validatorHandler')
 const { createTaskSchema, updateTaskSchema, getTaskSchema } = require('../schemas/task')
+const { checkApiKey } = require('./../middlewares/authHandler')
+
 
 const taskService = new TaskService()
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  try {
-    const tasks = await taskService.getTasks()
-    res.status(200).json(tasks)
-  } catch (error) {
-    next(error)
+router.get('/', 
+  checkApiKey,
+  passport.authenticate('jwt', {session: false}),
+  async (req, res, next) => {
+    try {
+      const tasks = await taskService.getTasks()
+      res.status(200).json(tasks)
+    } catch (error) {
+      next(error)
+    }
   }
-})
+)
 
 router.get('/:id', 
+  checkApiKey,
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getTaskSchema, 'params'), 
   async (req, res, next) => {
     try {
@@ -28,6 +37,8 @@ router.get('/:id',
 )
 
 router.post('/', 
+  checkApiKey,
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(createTaskSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -40,6 +51,8 @@ router.post('/',
 )
 
 router.patch('/:id', 
+  checkApiKey,
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getTaskSchema, 'params'), 
   validatorHandler(updateTaskSchema, 'body'), 
   async (req, res, next) => {
@@ -53,6 +66,8 @@ router.patch('/:id',
 )
 
 router.delete('/:id', 
+  checkApiKey,
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getTaskSchema, 'params'), 
   async (req, res, next) => {
     try {
