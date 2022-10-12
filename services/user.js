@@ -26,7 +26,7 @@ class UserService {
   async getUser(id) {
     return new Promise((resolve, reject) => {
       userModel.findById(id)
-        .populate('tasks', 'description', 'isCompleted')
+        .populate('tasks', 'description isCompleted')
         .exec((error, user) => {
           if (error) {
             reject(boom.notFound(`User not found`))
