@@ -14,6 +14,8 @@ const user = Joi.custom((value, helpers) => {
   }
   return value
 })
+const isCompleted = Joi.boolean()
+
 const description = Joi.string().min(1).max(255)
 
 const createTaskSchema = Joi.object({
@@ -23,6 +25,7 @@ const createTaskSchema = Joi.object({
 
 const updateTaskSchema = Joi.object({
   description: description,
+  isCompleted: isCompleted,
 })
 
 const getTaskSchema = Joi.object({

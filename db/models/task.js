@@ -13,6 +13,10 @@ const taskSchema = new Schema({
     maxlength: [255, '{VALUE} is too long'],
     required: true,
   },
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: Date.now
