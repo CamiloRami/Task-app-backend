@@ -7,19 +7,20 @@ const { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } = require('
 
 const app = express()
 
-const wl = [config.whitelist]
+const wl = config.whitelist.split(',')
 
-const options = {
-  origin: (origin, callback) => {
-    if (wl.includes(origin) || !origin) {
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (wl.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
     }
-  },
+  }
 }
+
 if (config.env === 'development') app.use(cors())
-if (config.env === 'production') app.use(cors(options))
+if (config.env === 'production') app.use(cors(corsOptions))
 
 db(config.dbUri)
 
