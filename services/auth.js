@@ -38,6 +38,15 @@ class AuthService {
       token,
     }
   }
+
+  async signUp(user) {
+    try {
+      const userCreated = await userService.createUser(user)
+      return userCreated
+    } catch (error) {
+      throw boom.badRequest('User not created')
+    }
+  }
 }
 
 module.exports = AuthService
